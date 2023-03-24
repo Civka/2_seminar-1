@@ -35,15 +35,22 @@ namespace seminar_1.Controllers
         [HttpGet]
         [Route("Top")]
 
-        public IActionResult GetTop(int topCount)
+        public IActionResult GetTop(int topCount, string? orderBy = "LastName")
         {
             if (topCount <= 0)
             {
                 return BadRequest();
             }
 
-            var result = _context.Students.Take(topCount).ToList();
-            return new JsonResult(result);
+            if (orderBy == "FirstName")
+            {
+                return new JsonResult(_context.Students.Take(topCount).OrderBy(x => x.FirstName).ToList());
+            }    
+            else
+            {
+                return new JsonResult(_context.Students.Take(topCount).OrderBy(x => x.LastName).ToList());
+            }
+            
         }
 
 
