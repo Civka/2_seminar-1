@@ -64,15 +64,14 @@ namespace seminar_1.Controllers
             List<Students> savedStudents = new List<Students>();
             foreach (var student in students)
             {
-                if(!_context.Students.Any(x => x.FirstName == x.FirstName && x.LastName == x.LastName)) 
-                {
-                    _context.Students.Add(student);
-                    _context.SaveChanges();
-                    savedStudents.Add(student);
-                }
-            }
+                bool duplicate = _context.Students.Where(x => x.FirstName == student.FirstName && x.LastName == student.LastName).Any();
+                if (duplicate) continue;
 
-            return Ok(savedStudents);
+                    _context.Students.Add(student);                     
+                    _context.SaveChanges();
+                
+            }
+            return Ok(students);
         }
         
     }
