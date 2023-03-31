@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MethodTimer;
+using Microsoft.AspNetCore.Mvc;
 using seminar_1.Data;
+using seminar_1.Data.DTO;
 using seminar_1.Data.Model;
 using System.Linq;
 
@@ -55,13 +57,13 @@ namespace seminar_1.Controllers
         }
 
 
-        
+       /*
         [HttpPost]
         [Route("Add")]
 
         public IActionResult PostAdd(List<Students> students)
         {
-            List<Students> savedStudents = new List<Students>();
+          
             foreach (var student in students)
             {
                 bool duplicate = _context.Students.Where(x => x.FirstName == student.FirstName && x.LastName == student.LastName).Any();
@@ -73,6 +75,32 @@ namespace seminar_1.Controllers
             }
             return Ok(students);
         }
-        
+       */
+
+        [Time]
+        [HttpPost]
+        [Route("Import")]
+
+        public IActionResult PostImport(List<StudentDto> studentsDto)
+        {
+            foreach (var studentDto in studentsDto)
+            {
+                bool duplicate = _context.Students.Where(x => x.ExternalId == studentDto._id).Any();
+                if (duplicate) continue;
+
+                var student = new Students()
+                {
+                    ExternalId = studentDto._id,
+                    About = studentDto.about,
+                    FirstName = studentDto.name.Split(' ')[0],
+                    LastName = studentDto.name.Split(' ')[1],
+                    Email = studentDto.email           
+                };
+
+                _context.Students.Add(student); // přidání do databáze
+            }
+            _context.SaveChanges();
+            return Ok();
+        }
     }
 }
