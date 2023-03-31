@@ -59,12 +59,20 @@ namespace seminar_1.Controllers
         [HttpPost]
         [Route("Add")]
 
-        public IActionResult PostAdd(Students student)
+        public IActionResult PostAdd(List<Students> students)
         {
-            _context.Students.Add(student);
-            _context.SaveChanges();
+            List<Students> savedStudents = new List<Students>();
+            foreach (var student in students)
+            {
+                if(!_context.Students.Any(x => x.FirstName == x.FirstName && x.LastName == x.LastName)) 
+                {
+                    _context.Students.Add(student);
+                    _context.SaveChanges();
+                    savedStudents.Add(student);
+                }
+            }
 
-            return Ok(student);
+            return Ok(savedStudents);
         }
         
     }
