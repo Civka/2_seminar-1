@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using seminar_1.Data;
+using seminar_1.Data.Model;
 using System.Linq;
 
 namespace seminar_1.Controllers
@@ -54,14 +55,17 @@ namespace seminar_1.Controllers
         }
 
 
-        /**
+        
         [HttpPost]
-        [Route("Create")]
+        [Route("Add")]
 
-        public IActionResult PostCreate()
+        public IActionResult PostAdd(Students student)
         {
+            _context.Students.Add(student);
+            _context.SaveChanges();
 
+            return Ok(student);
         }
-        */
+        
     }
 }
